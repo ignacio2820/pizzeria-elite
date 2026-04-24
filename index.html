@@ -55,6 +55,11 @@
       background: rgba(201, 162, 39, 0.35);
       border-radius: 3px;
     }
+    /* Imágenes del menú: mismo encuadre en todas las tarjetas */
+    img.menu-fit-cover {
+      object-fit: cover;
+      object-position: center;
+    }
   </style>
 </head>
 <body class="min-h-screen pb-28 antialiased">
@@ -258,7 +263,7 @@
           name: 'Carne Cortada a Cuchillo',
           desc: 'Empanada dorada — cebolla, morrón y especias de autor.',
           price: 950,
-          image: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=800&q=80',
+          image: 'https://images.unsplash.com/photo-1550414210-919565548651?q=80&w=800',
           strong: false,
           chatMatch: ['carne cortada', 'empanada de carne', 'empanadas de carne', 'empanada carne'],
         },
@@ -268,7 +273,7 @@
           name: 'Jamón y Queso Premium',
           desc: 'Masa mantecosa, jamón cocido y mezcla de quesos.',
           price: 900,
-          image: 'https://images.unsplash.com/photo-1606491956689-2ea866880a84?w=800&q=80',
+          image: 'https://images.unsplash.com/photo-1628102432746-8f3521b2123d?q=80&w=800',
           strong: false,
           chatMatch: ['jamon y queso', 'jamón y queso', 'jamon y queso premium', 'empanada jamon'],
         },
@@ -278,7 +283,7 @@
           name: 'Humita Regional',
           desc: 'Choclo cremoso, queso fresco y albahaca.',
           price: 880,
-          image: 'https://images.unsplash.com/photo-1604908177279-21974e0f0d39?w=800&q=80',
+          image: 'https://images.unsplash.com/photo-1619851608674-7e793910c20a?q=80&w=800',
           strong: false,
           chatMatch: ['humita', 'humita regional', 'empanada humita'],
         },
@@ -348,7 +353,7 @@
         return `
           <article class="group overflow-hidden rounded-2xl border border-amber-900/25 bg-elite-charcoal/60 transition hover:border-amber-600/40 hover:shadow-lg hover:shadow-amber-900/20">
             <div class="aspect-[4/3] overflow-hidden">
-              <img src="${p.image}" alt="${p.name}" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy" />
+              <img src="${p.image}" alt="${p.name}" class="menu-fit-cover h-full w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy" />
             </div>
             <div class="p-4">
               <h3 class="font-display text-lg font-semibold text-amber-50">${p.name}</h3>
@@ -486,7 +491,7 @@
             const qty = cart[id];
             return `
               <div class="flex items-center gap-3 border-b border-amber-900/20 py-3 last:border-0">
-                <img src="${p.image}" alt="" class="h-14 w-14 rounded-lg object-cover" />
+                <img src="${p.image}" alt="" class="menu-fit-cover h-14 w-14 shrink-0 rounded-lg object-cover" />
                 <div class="min-w-0 flex-1">
                   <p class="truncate font-medium text-amber-100">${p.name}</p>
                   <p class="text-xs text-amber-600">${currency.format(p.price)} × ${qty}</p>
