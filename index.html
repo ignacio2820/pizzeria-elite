@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pizzería Elite — Menú Digital</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            elite: {
+              black: '#0a0a0a',
+              charcoal: '#121212',
+              gold: '#c9a227',
+              goldlight: '#e8d48b',
+              golddark: '#8a7020',
+            },
+          },
+          fontFamily: {
+            display: ['"Playfair Display"', 'serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      background: linear-gradient(180deg, #0a0a0a 0%, #0d0d0d 40%, #0a0a0a 100%);
+      color: #e8e4dc;
+    }
+    .font-display { font-family: "Playfair Display", serif; }
+    .gold-gradient {
+      background: linear-gradient(135deg, #e8d48b 0%, #c9a227 45%, #8a7020 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gold-border { border: 1px solid rgba(201, 162, 39, 0.35); }
+    .gold-glow { box-shadow: 0 0 40px rgba(201, 162, 39, 0.12); }
+    @keyframes pulse-gold {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(201, 162, 39, 0.45); }
+      50% { box-shadow: 0 0 0 14px rgba(201, 162, 39, 0); }
+    }
+    .chat-pulse { animation: pulse-gold 2s ease-in-out infinite; }
+    .scrollbar-thin::-webkit-scrollbar { width: 6px; }
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+      background: rgba(201, 162, 39, 0.35);
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-28 antialiased">
+  <!-- Header -->
+  <header class="sticky top-0 z-40 border-b border-amber-900/20 bg-elite-black/95 backdrop-blur-md">
+    <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4">
+      <div class="flex items-center gap-3">
+        <div class="flex h-12 w-12 items-center justify-center rounded-full border border-amber-600/40 bg-gradient-to-br from-amber-900/30 to-elite-charcoal font-display text-xl font-bold text-amber-300">E</div>
+        <div>
+          <h1 class="font-display text-xl font-semibold tracking-tight text-amber-100 md:text-2xl">Pizzería Elite</h1>
+          <p class="text-xs font-medium uppercase tracking-[0.2em] text-amber-600/80">Experiencia Artesanal</p>
+        </div>
+      </div>
+      <button type="button" id="btnOpenCart" class="relative rounded-full border border-amber-600/40 px-4 py-2 text-sm font-medium text-amber-200 transition hover:bg-amber-900/20">
+        Pedido
+        <span id="cartBadge" class="absolute -right-1 -top-1 hidden min-w-[1.25rem] rounded-full bg-amber-600 px-1 text-center text-[10px] font-bold text-black">0</span>
+      </button>
+    </div>
+    <!-- Categorías -->
+    <nav class="border-t border-amber-900/15 bg-elite-charcoal/80">
+      <div class="mx-auto flex max-w-6xl gap-1 overflow-x-auto px-2 py-2 scrollbar-thin md:justify-center md:gap-2">
+        <a href="#clasicas" class="shrink-0 rounded-full border border-transparent px-4 py-2 text-sm text-amber-200/90 transition hover:border-amber-600/30 hover:bg-amber-950/40">Pizzas Clásicas</a>
+        <a href="#premium" class="shrink-0 rounded-full border border-transparent px-4 py-2 text-sm text-amber-200/90 transition hover:border-amber-600/30 hover:bg-amber-950/40">Pizzas Premium</a>
+        <a href="#bebidas" class="shrink-0 rounded-full border border-transparent px-4 py-2 text-sm text-amber-200/90 transition hover:border-amber-600/30 hover:bg-amber-950/40">Bebidas</a>
+        <a href="#faina" class="shrink-0 rounded-full border border-transparent px-4 py-2 text-sm text-amber-200/90 transition hover:border-amber-600/30 hover:bg-amber-950/40">Fainá & Entradas</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="mx-auto max-w-6xl px-4 py-10">
+    <p class="mx-auto mb-12 max-w-2xl text-center font-display text-2xl italic text-amber-100/90 md:text-3xl">
+      <span class="gold-gradient not-italic font-semibold">Fuego de leña</span>, masa madre y los mejores ingredientes.
+    </p>
+
+    <!-- Pizzas Clásicas -->
+    <section id="clasicas" class="mb-16 scroll-mt-36">
+      <h2 class="mb-6 border-b border-amber-800/30 pb-2 font-display text-2xl font-semibold text-amber-100">Pizzas Clásicas</h2>
+      <div id="gridClasicas" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>
+    </section>
+
+    <!-- Pizzas Premium -->
+    <section id="premium" class="mb-16 scroll-mt-36">
+      <h2 class="mb-6 border-b border-amber-800/30 pb-2 font-display text-2xl font-semibold text-amber-100">Pizzas Premium</h2>
+      <div id="gridPremium" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>
+    </section>
+
+    <!-- Bebidas -->
+    <section id="bebidas" class="mb-16 scroll-mt-36">
+      <h2 class="mb-6 border-b border-amber-800/30 pb-2 font-display text-2xl font-semibold text-amber-100">Bebidas</h2>
+      <div id="gridBebidas" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>
+    </section>
+
+    <!-- Fainá & Entradas -->
+    <section id="faina" class="mb-16 scroll-mt-36">
+      <h2 class="mb-6 border-b border-amber-800/30 pb-2 font-display text-2xl font-semibold text-amber-100">Fainá & Entradas</h2>
+      <div id="gridFaina" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>
+    </section>
+  </main>
+
+  <!-- Barra inferior carrito -->
+  <div class="fixed bottom-0 left-0 right-0 z-30 border-t border-amber-800/40 bg-elite-black/98 px-4 py-3 backdrop-blur-md">
+    <div class="mx-auto flex max-w-6xl items-center justify-between gap-3">
+      <div>
+        <p class="text-xs uppercase tracking-wider text-amber-600">Total estimado</p>
+        <p id="barTotal" class="font-display text-2xl font-semibold text-amber-200">$0</p>
+      </div>
+      <div class="flex flex-col items-end gap-1">
+        <p id="kitchenStatus" class="text-xs text-amber-500/90"></p>
+        <button type="button" id="btnFinalize" class="rounded-full bg-gradient-to-r from-amber-700 to-amber-500 px-6 py-3 text-sm font-semibold text-black shadow-lg shadow-amber-900/30 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40">
+          Finalizar Pedido
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal carrito -->
+  <div id="cartModal" class="fixed inset-0 z-50 hidden items-end justify-center bg-black/70 p-4 sm:items-center" aria-hidden="true">
+    <div class="max-h-[85vh] w-full max-w-lg overflow-hidden rounded-2xl border border-amber-800/40 bg-elite-charcoal shadow-2xl gold-glow">
+      <div class="flex items-center justify-between border-b border-amber-900/30 px-5 py-4">
+        <h3 class="font-display text-xl text-amber-100">Tu pedido</h3>
+        <button type="button" id="btnCloseCart" class="rounded-full p-2 text-amber-400 hover:bg-amber-900/30" aria-label="Cerrar">✕</button>
+      </div>
+      <div id="cartLines" class="max-h-[45vh] overflow-y-auto p-5 scrollbar-thin"></div>
+      <div class="border-t border-amber-900/30 px-5 py-4">
+        <div class="mb-4 flex justify-between text-amber-200">
+          <span>Total</span>
+          <span id="modalTotal" class="font-semibold">$0</span>
+        </div>
+        <button type="button" id="btnFinalizeModal" class="w-full rounded-full bg-gradient-to-r from-amber-700 to-amber-500 py-3 text-sm font-semibold text-black disabled:opacity-40">
+          Finalizar por WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tooltip proactivo -->
+  <div id="proactiveTooltip" class="pointer-events-none fixed bottom-28 right-6 z-40 max-w-xs translate-y-2 opacity-0 transition duration-300 md:bottom-32 md:right-8">
+    <div class="rounded-xl border border-amber-600/50 bg-elite-charcoal/95 px-4 py-3 text-sm text-amber-100 shadow-xl">
+      Excelente elección. ¿Te gustaría sumar una cerveza artesanal o una gaseosa familiar en promoción?
+    </div>
+  </div>
+
+  <!-- Chat flotante -->
+  <div class="fixed bottom-24 right-5 z-40 md:bottom-28 md:right-8">
+    <div id="chatPanel" class="mb-3 hidden w-[min(100vw-2.5rem,22rem)] overflow-hidden rounded-2xl border border-amber-700/40 bg-elite-charcoal shadow-2xl">
+      <div class="border-b border-amber-900/30 bg-amber-950/40 px-4 py-3">
+        <p class="font-display text-sm font-semibold text-amber-100">Asistente Elite</p>
+        <p class="text-[10px] uppercase tracking-wider text-amber-600">Recomendaciones & combos</p>
+      </div>
+      <div id="chatMessages" class="max-h-64 space-y-3 overflow-y-auto p-4 text-sm scrollbar-thin"></div>
+      <form id="chatForm" class="flex gap-2 border-t border-amber-900/30 p-3">
+        <input id="chatInput" type="text" placeholder="Escribí tu consulta…" class="min-w-0 flex-1 rounded-lg border border-amber-800/40 bg-black/40 px-3 py-2 text-sm text-amber-50 placeholder:text-amber-800 focus:border-amber-500 focus:outline-none" autocomplete="off" />
+        <button type="submit" class="shrink-0 rounded-lg bg-amber-600 px-3 py-2 text-xs font-bold text-black">Enviar</button>
+      </form>
+    </div>
+    <button type="button" id="chatBubble" class="chat-pulse flex h-14 w-14 items-center justify-center rounded-full border-2 border-amber-500/60 bg-gradient-to-br from-amber-800 to-amber-600 text-2xl text-black shadow-lg" aria-label="Abrir asistente">
+      💬
+    </button>
+  </div>
+
+  <script>
+    (function () {
+      const STORAGE_KEY = 'pizzeria-elite-cart-v1';
+      /** Número WhatsApp: código país + número sin + ni espacios */
+      const WHATSAPP_NUMBER = '5491112345678';
+
+      /** Horario cocina: 12:00 a 23:00 (local). Ajustá inicio/fin en horas 0-23 */
+      const KITCHEN_OPEN_HOUR = 12;
+      const KITCHEN_CLOSE_HOUR = 23;
+
+      const currency = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 });
+
+      const PRODUCTS = [
+        {
+          id: 'muzz',
+          category: 'clasicas',
+          name: 'Muzzarella de la Casa',
+          desc: 'Salsa tomate italiana, muzzarella premium.',
+          price: 8500,
+          image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&q=80',
+          strong: false,
+        },
+        {
+          id: 'napo',
+          category: 'clasicas',
+          name: 'Napolitana',
+          desc: 'Muzzarella, tomate en rodajas, ajo y orégano.',
+          price: 9200,
+          image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=800&q=80',
+          strong: false,
+        },
+        {
+          id: 'fugazza',
+          category: 'clasicas',
+          name: 'Fugazzeta',
+          desc: 'Cebolla abundante y muzzarella gratinada.',
+          price: 9800,
+          image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80',
+          strong: false,
+        },
+        {
+          id: 'patagonica',
+          category: 'premium',
+          name: 'Patagónica',
+          desc: 'Cordero braseado, hongos, rúcula, reducción balsámica.',
+          price: 16500,
+          image: 'https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?w=800&q=80',
+          strong: true,
+        },
+        {
+          id: 'trufa',
+          category: 'premium',
+          name: 'Trufa Negra',
+          desc: 'Crema de trufa, parmesano, champiñones salteados.',
+          price: 15800,
+          image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?w=800&q=80',
+          strong: true,
+        },
+        {
+          id: 'cerveza',
+          category: 'bebidas',
+          name: 'Cerveza Artesanal IPA',
+          desc: '500 ml — maridaje ideal con premium.',
+          price: 2200,
+          image: 'https://images.unsplash.com/photo-1535957006857-44f48e901f2a?w=800&q=80',
+          strong: false,
+        },
+        {
+          id: 'gaseosa',
+          category: 'bebidas',
+          name: 'Gaseosa Familiar 2,25 L',
+          desc: 'Promo combo — compartí en la mesa.',
+          price: 1800,
+          image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=800&q=80',
+          strong: false,
+        },
+        {
+          id: 'vino',
+          category: 'bebidas',
+          name: 'Malbec Reserva (copa)',
+          desc: 'Corte recomendado con cordero.',
+          price: 2500,
+          image: 'https://images.unsplash.com/photo-1510812431400-41d2bd2722f3?w=800&q=80',
+          strong: false,
+        },
+        {
+          id: 'faina',
+          category: 'faina',
+          name: 'Fainá Tradicional',
+          desc: 'Porción dorada de harina de garbanzo.',
+          price: 1200,
+          image: 'https://images.unsplash.com/photo-1593560708920-61dd19c43254?w=800&q=80',
+          strong: false,
+        },
+        {
+          id: 'provo',
+          category: 'faina',
+          name: 'Provoletas al horno',
+          desc: 'Queso provolone, orégano y aceite de oliva.',
+          price: 4500,
+          image: 'https://images.unsplash.com/photo-1541746972996-4e0b0f43e02a?w=800&q=80',
+          strong: false,
+        },
+        {
+          id: 'borde',
+          category: 'faina',
+          name: 'Borde Relleno de Queso',
+          desc: 'Adicional para tu pizza — queso cremoso en el borde.',
+          price: 2800,
+          image: 'https://images.unsplash.com/photo-1628840043320-0d1475cda7bf?w=800&q=80',
+          strong: false,
+        },
+      ];
+
+      function productCard(p) {
+        return `
+          <article class="group overflow-hidden rounded-2xl border border-amber-900/25 bg-elite-charcoal/60 transition hover:border-amber-600/40 hover:shadow-lg hover:shadow-amber-900/20">
+            <div class="aspect-[4/3] overflow-hidden">
+              <img src="${p.image}" alt="${p.name}" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy" />
+            </div>
+            <div class="p-4">
+              <h3 class="font-display text-lg font-semibold text-amber-50">${p.name}</h3>
+              <p class="mt-1 text-sm text-amber-200/70">${p.desc}</p>
+              <div class="mt-4 flex items-center justify-between gap-2">
+                <span class="font-semibold text-amber-300">${currency.format(p.price)}</span>
+                <button type="button" data-add="${p.id}" class="rounded-full border border-amber-600/50 bg-amber-950/40 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-amber-200 transition hover:bg-amber-600 hover:text-black">Añadir al pedido</button>
+              </div>
+            </div>
+          </article>`;
+      }
+
+      function renderProducts() {
+        const byCat = { clasicas: [], premium: [], bebidas: [], faina: [] };
+        PRODUCTS.forEach((p) => {
+          if (byCat[p.category]) byCat[p.category].push(p);
+        });
+        document.getElementById('gridClasicas').innerHTML = byCat.clasicas.map(productCard).join('');
+        document.getElementById('gridPremium').innerHTML = byCat.premium.map(productCard).join('');
+        document.getElementById('gridBebidas').innerHTML = byCat.bebidas.map(productCard).join('');
+        document.getElementById('gridFaina').innerHTML = byCat.faina.map(productCard).join('');
+      }
+
+      function loadCart() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return {};
+          const data = JSON.parse(raw);
+          return typeof data === 'object' && data !== null ? data : {};
+        } catch {
+          return {};
+        }
+      }
+
+      function saveCart(cart) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+      }
+
+      let cart = loadCart();
+
+      function getProduct(id) {
+        return PRODUCTS.find((p) => p.id === id);
+      }
+
+      function cartCount() {
+        return Object.values(cart).reduce((a, n) => a + n, 0);
+      }
+
+      function cartTotal() {
+        let t = 0;
+        Object.entries(cart).forEach(([id, qty]) => {
+          const p = getProduct(id);
+          if (p) t += p.price * qty;
+        });
+        return t;
+      }
+
+      function isKitchenOpen() {
+        const h = new Date().getHours();
+        return h >= KITCHEN_OPEN_HOUR && h < KITCHEN_CLOSE_HOUR;
+      }
+
+      function updateKitchenUI() {
+        const open = isKitchenOpen();
+        const el = document.getElementById('kitchenStatus');
+        const fmt = (n) => (n < 10 ? '0' + n : '' + n);
+        if (open) {
+          el.textContent = `Cocina abierta · ${fmt(KITCHEN_OPEN_HOUR)}:00 – ${fmt(KITCHEN_CLOSE_HOUR)}:00`;
+        } else {
+          el.textContent = `Cocina cerrada · Pedidos desde las ${fmt(KITCHEN_OPEN_HOUR)}:00 hs`;
+        }
+        document.getElementById('btnFinalize').disabled = !open || cartCount() === 0;
+        document.getElementById('btnFinalizeModal').disabled = !open || cartCount() === 0;
+      }
+
+      function updateUI() {
+        const total = cartTotal();
+        document.getElementById('barTotal').textContent = currency.format(total);
+        document.getElementById('modalTotal').textContent = currency.format(total);
+        const badge = document.getElementById('cartBadge');
+        const n = cartCount();
+        if (n > 0) {
+          badge.textContent = n > 99 ? '99+' : String(n);
+          badge.classList.remove('hidden');
+        } else {
+          badge.classList.add('hidden');
+        }
+        renderCartLines();
+        updateKitchenUI();
+      }
+
+      function renderCartLines() {
+        const container = document.getElementById('cartLines');
+        const ids = Object.keys(cart).filter((id) => cart[id] > 0);
+        if (ids.length === 0) {
+          container.innerHTML = '<p class="text-center text-sm text-amber-600/80">Tu carrito está vacío.</p>';
+          return;
+        }
+        container.innerHTML = ids
+          .map((id) => {
+            const p = getProduct(id);
+            if (!p) return '';
+            const qty = cart[id];
+            return `
+              <div class="flex items-center gap-3 border-b border-amber-900/20 py-3 last:border-0">
+                <img src="${p.image}" alt="" class="h-14 w-14 rounded-lg object-cover" />
+                <div class="min-w-0 flex-1">
+                  <p class="truncate font-medium text-amber-100">${p.name}</p>
+                  <p class="text-xs text-amber-600">${currency.format(p.price)} × ${qty}</p>
+                </div>
+                <div class="flex items-center gap-1">
+                  <button type="button" data-dec="${id}" class="rounded bg-amber-900/40 px-2 py-1 text-amber-200">−</button>
+                  <span class="w-6 text-center text-sm">${qty}</span>
+                  <button type="button" data-inc="${id}" class="rounded bg-amber-900/40 px-2 py-1 text-amber-200">+</button>
+                </div>
+              </div>`;
+          })
+          .join('');
+      }
+
+      function addToCart(id, qty) {
+        const p = getProduct(id);
+        if (!p) return;
+        cart[id] = (cart[id] || 0) + qty;
+        if (cart[id] <= 0) delete cart[id];
+        saveCart(cart);
+        updateUI();
+        if (qty > 0 && p.strong) scheduleProactive();
+      }
+
+      let proactiveTimer = null;
+      function scheduleProactive() {
+        if (proactiveTimer) clearTimeout(proactiveTimer);
+        proactiveTimer = setTimeout(() => {
+          const tip = document.getElementById('proactiveTooltip');
+          tip.classList.remove('opacity-0', 'translate-y-2');
+          tip.classList.add('opacity-100', 'translate-y-0');
+          setTimeout(() => {
+            tip.classList.add('opacity-0', 'translate-y-2');
+            tip.classList.remove('opacity-100', 'translate-y-0');
+          }, 8000);
+        }, 3000);
+      }
+
+      function buildWhatsAppMessage() {
+        const lines = ['🍕 *PIZZERÍA ELITE — NUEVO PEDIDO*', ''];
+        lines.push('*Productos:*');
+        Object.entries(cart).forEach(([id, qty]) => {
+          const p = getProduct(id);
+          if (p && qty > 0) lines.push(`• ${qty}× ${p.name} — ${currency.format(p.price * qty)}`);
+        });
+        lines.push('');
+        lines.push(`*Total estimado:* ${currency.format(cartTotal())}`);
+        lines.push('');
+        lines.push('_Enviado desde el menú digital._');
+        return encodeURIComponent(lines.join('\n'));
+      }
+
+      function openWhatsApp() {
+        if (!isKitchenOpen() || cartCount() === 0) return;
+        const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${buildWhatsAppMessage()}`;
+        window.open(url, '_blank', 'noopener,noreferrer');
+      }
+
+      /** Campana sutil (Web Audio) */
+      function playBell() {
+        try {
+          const ctx = new (window.AudioContext || window.webkitAudioContext)();
+          const g = ctx.createGain();
+          g.connect(ctx.destination);
+          g.gain.setValueAtTime(0.0001, ctx.currentTime);
+          g.gain.exponentialRampToValueAtTime(0.12, ctx.currentTime + 0.02);
+          g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.45);
+          const o1 = ctx.createOscillator();
+          o1.type = 'sine';
+          o1.frequency.setValueAtTime(880, ctx.currentTime);
+          o1.connect(g);
+          o1.start(ctx.currentTime);
+          o1.stop(ctx.currentTime + 0.35);
+          const o2 = ctx.createOscillator();
+          o2.type = 'sine';
+          o2.frequency.setValueAtTime(1320, ctx.currentTime + 0.08);
+          o2.connect(g);
+          o2.start(ctx.currentTime + 0.08);
+          o2.stop(ctx.currentTime + 0.4);
+        } catch (_) {}
+      }
+
+      let chatOpenedOnce = false;
+      const chatPanel = document.getElementById('chatPanel');
+      const chatBubble = document.getElementById('chatBubble');
+      const chatMessages = document.getElementById('chatMessages');
+
+      function appendChat(role, text) {
+        const div = document.createElement('div');
+        div.className = role === 'user' ? 'ml-6 rounded-lg bg-amber-900/30 px-3 py-2 text-amber-50' : 'mr-4 rounded-lg border border-amber-800/40 bg-black/30 px-3 py-2 text-amber-100/95';
+        div.textContent = text;
+        chatMessages.appendChild(div);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+
+      function aiReply(userText) {
+        const t = userText.trim().toLowerCase();
+        if (t.includes('promoción') || t.includes('promocion')) {
+          return '¡Combo del mes! Patagónica en tamaño grande + Gaseosa Familiar 2,25 L con 15% de descuento sobre el precio menú. Sumalos desde el menú (sección Premium y Bebidas) y al finalizar el pedido la comanda llega ordenada por WhatsApp.';
+        }
+        if (/grande|tamaño|mediana/i.test(t)) {
+          return 'Para grupos conviene pasar de mediana a grande: mejor costo por porción y el borde queda más crocante. Sumá Fainá Tradicional y Gaseosa Familiar: cerrás la mesa estilo catering Elite.';
+        }
+        if (/recomend|suger|qué pizza|que pizza/i.test(t)) {
+          return 'Hoy destacamos la Patagónica (cordero braseado y reducción balsámica). Si preferís clásica, la Muzzarella de la Casa nunca falla. ¿Te sumamos un Borde Relleno de Queso para redondear?';
+        }
+        return 'Puedo ayudarte con combos, promos o maridajes. Escribí la palabra «promoción» para ver pizza + bebida familiar, o preguntá por tamaños y adicionales.';
+      }
+
+      function openChatFirstTime() {
+        if (chatPanel.classList.contains('hidden')) {
+          chatPanel.classList.remove('hidden');
+          playBell();
+          if (!chatOpenedOnce) {
+            chatOpenedOnce = true;
+            appendChat(
+              'bot',
+              'Bienvenido a Pizzería Elite. Soy su asistente. ¿Le gustaría que le recomiende nuestra pizza premium del mes o un adicional para su pedido?'
+            );
+          }
+        } else {
+          chatPanel.classList.add('hidden');
+        }
+      }
+
+      document.getElementById('chatForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const input = document.getElementById('chatInput');
+        const text = input.value.trim();
+        if (!text) return;
+        appendChat('user', text);
+        input.value = '';
+        setTimeout(() => appendChat('bot', aiReply(text)), 450);
+      });
+
+      chatBubble.addEventListener('click', () => openChatFirstTime());
+
+      document.getElementById('btnOpenCart').addEventListener('click', () => {
+        document.getElementById('cartModal').classList.remove('hidden');
+        document.getElementById('cartModal').classList.add('flex');
+      });
+      document.getElementById('btnCloseCart').addEventListener('click', () => {
+        document.getElementById('cartModal').classList.add('hidden');
+        document.getElementById('cartModal').classList.remove('flex');
+      });
+      document.getElementById('cartModal').addEventListener('click', (e) => {
+        if (e.target.id === 'cartModal') {
+          document.getElementById('cartModal').classList.add('hidden');
+          document.getElementById('cartModal').classList.remove('flex');
+        }
+      });
+
+      document.getElementById('cartLines').addEventListener('click', (e) => {
+        const t = e.target;
+        if (t.dataset.inc) addToCart(t.dataset.inc, 1);
+        if (t.dataset.dec) addToCart(t.dataset.dec, -1);
+      });
+
+      document.body.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-add]');
+        if (btn && btn.dataset.add) addToCart(btn.dataset.add, 1);
+      });
+
+      document.getElementById('btnFinalize').addEventListener('click', openWhatsApp);
+      document.getElementById('btnFinalizeModal').addEventListener('click', openWhatsApp);
+
+      setInterval(updateKitchenUI, 60000);
+
+      renderProducts();
+      updateUI();
+    })();
+  </script>
+</body>
+</html>
