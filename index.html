@@ -78,6 +78,7 @@
       <div class="mx-auto flex max-w-6xl gap-1 overflow-x-auto px-2 py-2 scrollbar-thin md:justify-center md:gap-2">
         <a href="#clasicas" class="shrink-0 rounded-full border border-transparent px-4 py-2 text-sm text-amber-200/90 transition hover:border-amber-600/30 hover:bg-amber-950/40">Pizzas Clásicas</a>
         <a href="#premium" class="shrink-0 rounded-full border border-transparent px-4 py-2 text-sm text-amber-200/90 transition hover:border-amber-600/30 hover:bg-amber-950/40">Pizzas Premium</a>
+        <a href="#empanadas" class="shrink-0 rounded-full border border-transparent px-4 py-2 text-sm text-amber-200/90 transition hover:border-amber-600/30 hover:bg-amber-950/40">Empanadas de Autor</a>
         <a href="#bebidas" class="shrink-0 rounded-full border border-transparent px-4 py-2 text-sm text-amber-200/90 transition hover:border-amber-600/30 hover:bg-amber-950/40">Bebidas</a>
         <a href="#faina" class="shrink-0 rounded-full border border-transparent px-4 py-2 text-sm text-amber-200/90 transition hover:border-amber-600/30 hover:bg-amber-950/40">Fainá & Entradas</a>
       </div>
@@ -99,6 +100,13 @@
     <section id="premium" class="mb-16 scroll-mt-36">
       <h2 class="mb-6 border-b border-amber-800/30 pb-2 font-display text-2xl font-semibold text-amber-100">Pizzas Premium</h2>
       <div id="gridPremium" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>
+    </section>
+
+    <!-- Empanadas de Autor -->
+    <section id="empanadas" class="mb-16 scroll-mt-36">
+      <h2 class="mb-6 border-b border-amber-800/30 pb-2 font-display text-2xl font-semibold text-amber-100">Empanadas de Autor</h2>
+      <p class="mb-6 text-sm text-amber-200/60">Masa dorada, rellenos de autor y horneado al momento.</p>
+      <div id="gridEmpanadas" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>
     </section>
 
     <!-- Bebidas -->
@@ -137,6 +145,11 @@
         <h3 class="font-display text-xl text-amber-100">Tu pedido</h3>
         <button type="button" id="btnCloseCart" class="rounded-full p-2 text-amber-400 hover:bg-amber-900/30" aria-label="Cerrar">✕</button>
       </div>
+      <div id="cartDrinkBanner" class="hidden border-b border-amber-700/30 bg-amber-950/50 px-5 py-4">
+        <p class="text-xs font-semibold uppercase tracking-wider text-amber-500">Maestro Virtual</p>
+        <p id="cartDrinkBannerText" class="mt-1 text-sm text-amber-100/95"></p>
+        <button type="button" id="btnAddGaseosaFromBanner" class="mt-3 w-full rounded-full border border-amber-500/60 bg-amber-600/20 py-2 text-xs font-bold uppercase tracking-wide text-amber-200 transition hover:bg-amber-600 hover:text-black">Sumar gaseosa familiar</button>
+      </div>
       <div id="cartLines" class="max-h-[45vh] overflow-y-auto p-5 scrollbar-thin"></div>
       <div class="border-t border-amber-900/30 px-5 py-4">
         <div class="mb-4 flex justify-between text-amber-200">
@@ -150,19 +163,17 @@
     </div>
   </div>
 
-  <!-- Tooltip proactivo -->
-  <div id="proactiveTooltip" class="pointer-events-none fixed bottom-28 right-6 z-40 max-w-xs translate-y-2 opacity-0 transition duration-300 md:bottom-32 md:right-8">
-    <div class="rounded-xl border border-amber-600/50 bg-elite-charcoal/95 px-4 py-3 text-sm text-amber-100 shadow-xl">
-      Excelente elección. ¿Te gustaría sumar una cerveza artesanal o una gaseosa familiar en promoción?
-    </div>
+  <!-- Tooltip proactivo (texto dinámico desde JS) -->
+  <div id="proactiveTooltip" class="pointer-events-none fixed bottom-28 right-6 z-40 max-w-sm translate-y-2 opacity-0 transition duration-300 md:bottom-32 md:right-8">
+    <div id="proactiveTooltipInner" class="rounded-xl border border-amber-600/50 bg-elite-charcoal/95 px-4 py-3 text-sm leading-snug text-amber-100 shadow-xl"></div>
   </div>
 
   <!-- Chat flotante -->
   <div class="fixed bottom-24 right-5 z-40 md:bottom-28 md:right-8">
     <div id="chatPanel" class="mb-3 hidden w-[min(100vw-2.5rem,22rem)] overflow-hidden rounded-2xl border border-amber-700/40 bg-elite-charcoal shadow-2xl">
       <div class="border-b border-amber-900/30 bg-amber-950/40 px-4 py-3">
-        <p class="font-display text-sm font-semibold text-amber-100">Asistente Elite</p>
-        <p class="text-[10px] uppercase tracking-wider text-amber-600">Recomendaciones & combos</p>
+        <p class="font-display text-sm font-semibold text-amber-100">Maestro Virtual Elite</p>
+        <p class="text-[10px] uppercase tracking-wider text-amber-600">Maestro Pizzero · combos & pedidos</p>
       </div>
       <div id="chatMessages" class="max-h-64 space-y-3 overflow-y-auto p-4 text-sm scrollbar-thin"></div>
       <form id="chatForm" class="flex gap-2 border-t border-amber-900/30 p-3">
@@ -187,6 +198,9 @@
 
       const currency = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 });
 
+      const DRINK_CATEGORY = 'bebidas';
+      const FOOD_CATEGORIES = ['clasicas', 'premium', 'empanadas', 'faina'];
+
       const PRODUCTS = [
         {
           id: 'muzz',
@@ -196,6 +210,7 @@
           price: 8500,
           image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&q=80',
           strong: false,
+          chatMatch: ['muzzarella', 'muzza', 'mozzarella', 'muza'],
         },
         {
           id: 'napo',
@@ -205,6 +220,7 @@
           price: 9200,
           image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=800&q=80',
           strong: false,
+          chatMatch: ['napolitana'],
         },
         {
           id: 'fugazza',
@@ -214,6 +230,7 @@
           price: 9800,
           image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80',
           strong: false,
+          chatMatch: ['fugazzeta', 'fugazza'],
         },
         {
           id: 'patagonica',
@@ -223,6 +240,7 @@
           price: 16500,
           image: 'https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?w=800&q=80',
           strong: true,
+          chatMatch: ['patagonica', 'patagónica'],
         },
         {
           id: 'trufa',
@@ -232,6 +250,37 @@
           price: 15800,
           image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?w=800&q=80',
           strong: true,
+          chatMatch: ['trufa negra', 'trufa'],
+        },
+        {
+          id: 'emp-carne',
+          category: 'empanadas',
+          name: 'Carne Cortada a Cuchillo',
+          desc: 'Empanada dorada — cebolla, morrón y especias de autor.',
+          price: 950,
+          image: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=800&q=80',
+          strong: false,
+          chatMatch: ['carne cortada', 'empanada de carne', 'empanadas de carne', 'empanada carne'],
+        },
+        {
+          id: 'emp-jamon',
+          category: 'empanadas',
+          name: 'Jamón y Queso Premium',
+          desc: 'Masa mantecosa, jamón cocido y mezcla de quesos.',
+          price: 900,
+          image: 'https://images.unsplash.com/photo-1606491956689-2ea866880a84?w=800&q=80',
+          strong: false,
+          chatMatch: ['jamon y queso', 'jamón y queso', 'jamon y queso premium', 'empanada jamon'],
+        },
+        {
+          id: 'emp-humita',
+          category: 'empanadas',
+          name: 'Humita Regional',
+          desc: 'Choclo cremoso, queso fresco y albahaca.',
+          price: 880,
+          image: 'https://images.unsplash.com/photo-1604908177279-21974e0f0d39?w=800&q=80',
+          strong: false,
+          chatMatch: ['humita', 'humita regional', 'empanada humita'],
         },
         {
           id: 'cerveza',
@@ -241,6 +290,7 @@
           price: 2200,
           image: 'https://images.unsplash.com/photo-1535957006857-44f48e901f2a?w=800&q=80',
           strong: false,
+          chatMatch: ['cerveza', 'ipa artesanal', 'cerveza ipa'],
         },
         {
           id: 'gaseosa',
@@ -250,6 +300,7 @@
           price: 1800,
           image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=800&q=80',
           strong: false,
+          chatMatch: ['gaseosa familiar', 'gaseosa', 'bebida familiar'],
         },
         {
           id: 'vino',
@@ -259,6 +310,7 @@
           price: 2500,
           image: 'https://images.unsplash.com/photo-1510812431400-41d2bd2722f3?w=800&q=80',
           strong: false,
+          chatMatch: ['malbec', 'vino', 'copa de vino'],
         },
         {
           id: 'faina',
@@ -268,6 +320,7 @@
           price: 1200,
           image: 'https://images.unsplash.com/photo-1593560708920-61dd19c43254?w=800&q=80',
           strong: false,
+          chatMatch: ['faina', 'fainá'],
         },
         {
           id: 'provo',
@@ -277,6 +330,7 @@
           price: 4500,
           image: 'https://images.unsplash.com/photo-1541746972996-4e0b0f43e02a?w=800&q=80',
           strong: false,
+          chatMatch: ['provoleta', 'provoletas'],
         },
         {
           id: 'borde',
@@ -286,6 +340,7 @@
           price: 2800,
           image: 'https://images.unsplash.com/photo-1628840043320-0d1475cda7bf?w=800&q=80',
           strong: false,
+          chatMatch: ['borde relleno', 'borde'],
         },
       ];
 
@@ -307,12 +362,13 @@
       }
 
       function renderProducts() {
-        const byCat = { clasicas: [], premium: [], bebidas: [], faina: [] };
+        const byCat = { clasicas: [], premium: [], empanadas: [], bebidas: [], faina: [] };
         PRODUCTS.forEach((p) => {
           if (byCat[p.category]) byCat[p.category].push(p);
         });
         document.getElementById('gridClasicas').innerHTML = byCat.clasicas.map(productCard).join('');
         document.getElementById('gridPremium').innerHTML = byCat.premium.map(productCard).join('');
+        document.getElementById('gridEmpanadas').innerHTML = byCat.empanadas.map(productCard).join('');
         document.getElementById('gridBebidas').innerHTML = byCat.bebidas.map(productCard).join('');
         document.getElementById('gridFaina').innerHTML = byCat.faina.map(productCard).join('');
       }
@@ -383,6 +439,37 @@
         }
         renderCartLines();
         updateKitchenUI();
+        syncCartDrinkBanner();
+      }
+
+      function cartHasDrink() {
+        return Object.keys(cart).some((id) => {
+          const q = cart[id];
+          const p = getProduct(id);
+          return q > 0 && p && p.category === DRINK_CATEGORY;
+        });
+      }
+
+      function cartHasFood() {
+        return Object.keys(cart).some((id) => {
+          const q = cart[id];
+          const p = getProduct(id);
+          return q > 0 && p && FOOD_CATEGORIES.includes(p.category);
+        });
+      }
+
+      function syncCartDrinkBanner() {
+        const banner = document.getElementById('cartDrinkBanner');
+        const modal = document.getElementById('cartModal');
+        const visible = !modal.classList.contains('hidden') && modal.classList.contains('flex');
+        const show = visible && cartHasFood() && !cartHasDrink() && cartCount() > 0;
+        if (show) {
+          banner.classList.remove('hidden');
+          document.getElementById('cartDrinkBannerText').textContent =
+            'Tenés comida en el pedido pero todavía no sumaste bebida. La Gaseosa Familiar 2,25 L es la que más piden para compartir en la mesa. ¿La agregamos antes de cerrar?';
+        } else {
+          banner.classList.add('hidden');
+        }
       }
 
       function renderCartLines() {
@@ -421,20 +508,32 @@
         if (cart[id] <= 0) delete cart[id];
         saveCart(cart);
         updateUI();
-        if (qty > 0 && p.strong) scheduleProactive();
+        if (qty > 0 && (p.category === 'clasicas' || p.category === 'premium')) schedulePizzaEmpanadaProactive();
       }
 
-      let proactiveTimer = null;
-      function scheduleProactive() {
-        if (proactiveTimer) clearTimeout(proactiveTimer);
-        proactiveTimer = setTimeout(() => {
-          const tip = document.getElementById('proactiveTooltip');
-          tip.classList.remove('opacity-0', 'translate-y-2');
-          tip.classList.add('opacity-100', 'translate-y-0');
-          setTimeout(() => {
-            tip.classList.add('opacity-0', 'translate-y-2');
-            tip.classList.remove('opacity-100', 'translate-y-0');
-          }, 8000);
+      let tooltipHideTimer = null;
+      let pizzaEmpanadaDelayTimer = null;
+
+      function showProactiveTooltip(message, hideMs) {
+        const tip = document.getElementById('proactiveTooltip');
+        const inner = document.getElementById('proactiveTooltipInner');
+        inner.textContent = message;
+        if (tooltipHideTimer) clearTimeout(tooltipHideTimer);
+        tip.classList.remove('opacity-0', 'translate-y-2');
+        tip.classList.add('opacity-100', 'translate-y-0');
+        tooltipHideTimer = setTimeout(() => {
+          tip.classList.add('opacity-0', 'translate-y-2');
+          tip.classList.remove('opacity-100', 'translate-y-0');
+        }, hideMs || 9000);
+      }
+
+      function schedulePizzaEmpanadaProactive() {
+        if (pizzaEmpanadaDelayTimer) clearTimeout(pizzaEmpanadaDelayTimer);
+        pizzaEmpanadaDelayTimer = setTimeout(() => {
+          showProactiveTooltip(
+            'Nuestras empanadas de carne son el acompañamiento perfecto. ¿Te sumo una docena con 10% de descuento?',
+            10000
+          );
         }, 3000);
       }
 
@@ -483,9 +582,57 @@
       }
 
       let chatOpenedOnce = false;
+      let pendingChatProductId = null;
+      let drinkHintChatSig = '';
+
       const chatPanel = document.getElementById('chatPanel');
       const chatBubble = document.getElementById('chatBubble');
       const chatMessages = document.getElementById('chatMessages');
+
+      function normalizeChat(s) {
+        return String(s)
+          .trim()
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '');
+      }
+
+      function findProductIdFromChat(text) {
+        const t = normalizeChat(text);
+        if (t.length < 2) return null;
+        let bestId = null;
+        let bestLen = 0;
+        PRODUCTS.forEach((p) => {
+          (p.chatMatch || []).forEach((m) => {
+            const nm = normalizeChat(m);
+            if (nm.length >= 2 && t.includes(nm) && nm.length > bestLen) {
+              bestLen = nm.length;
+              bestId = p.id;
+            }
+          });
+        });
+        return bestId;
+      }
+
+      function isAffirmative(t) {
+        const s = normalizeChat(t);
+        if (!s) return false;
+        if (s === 'si' || s === 'sí') return true;
+        if (/^(s[ií]|dale|ok|oka|listo|confirmo|sum[aá]|agreg|añad|hacelo|perfecto|bueno|claro|de acuerdo)\b/.test(s)) return true;
+        if (/\b(si quiero|sí quiero|si dale|dale si|sumalo|sumalo al carrito)\b/.test(s)) return true;
+        return false;
+      }
+
+      function isNegative(t) {
+        const s = normalizeChat(t);
+        if (!s) return false;
+        if (s === 'no') return true;
+        return /^(no|nop|mejor no|cancelar|dej[aá]|no gracias)\b/.test(s);
+      }
+
+      function maestroMensajeInicial() {
+        return '¡Buenas noches! Soy el Maestro Virtual de Elite. ¿Buscás una pizza clásica, nuestras empanadas premiadas o querés que te arme un combo ideal?';
+      }
 
       function appendChat(role, text) {
         const div = document.createElement('div');
@@ -495,18 +642,71 @@
         chatMessages.scrollTop = chatMessages.scrollHeight;
       }
 
-      function aiReply(userText) {
-        const t = userText.trim().toLowerCase();
-        if (t.includes('promoción') || t.includes('promocion')) {
-          return '¡Combo del mes! Patagónica en tamaño grande + Gaseosa Familiar 2,25 L con 15% de descuento sobre el precio menú. Sumalos desde el menú (sección Premium y Bebidas) y al finalizar el pedido la comanda llega ordenada por WhatsApp.';
+      function aiReplyFallback(userText) {
+        const t = normalizeChat(userText);
+        if (/grande|tamano|mediana/.test(t)) {
+          return 'Para grupos conviene pasar de mediana a grande: mejor costo por porción y el borde más crocante. Sumá Fainá y Gaseosa Familiar: cerrás la mesa estilo catering Elite.';
         }
-        if (/grande|tamaño|mediana/i.test(t)) {
-          return 'Para grupos conviene pasar de mediana a grande: mejor costo por porción y el borde queda más crocante. Sumá Fainá Tradicional y Gaseosa Familiar: cerrás la mesa estilo catering Elite.';
+        if (/recomend|suger|que pizza|empanada/.test(t)) {
+          return 'Hoy destacamos la Patagónica y las empanadas Carne Cortada a Cuchillo. Si querés clásica, la Muzzarella de la Casa es imbatible. ¿Te sumo un Borde Relleno de Queso?';
         }
-        if (/recomend|suger|qué pizza|que pizza/i.test(t)) {
-          return 'Hoy destacamos la Patagónica (cordero braseado y reducción balsámica). Si preferís clásica, la Muzzarella de la Casa nunca falla. ¿Te sumamos un Borde Relleno de Queso para redondear?';
+        return 'Decime un plato por nombre (por ejemplo «Muzzarella» o «Humita Regional») y te lo sumo al carrito, o escribí «promoción» para un combo. También podés pedirme un combo ideal.';
+      }
+
+      function globalIntentReply(text) {
+        const t = normalizeChat(text);
+        if (t.includes('promocion')) {
+          return '¡Combo del mes! Patagónica en tamaño grande + Gaseosa Familiar 2,25 L con 15% de descuento sobre el precio menú. Sumalos desde el menú (Premium y Bebidas) y al finalizar la comanda llega ordenada por WhatsApp.';
         }
-        return 'Puedo ayudarte con combos, promos o maridajes. Escribí la palabra «promoción» para ver pizza + bebida familiar, o preguntá por tamaños y adicionales.';
+        return null;
+      }
+
+      function processMaestroMessage(raw) {
+        const text = raw.trim();
+        if (!text) return;
+        appendChat('user', text);
+
+        const global = globalIntentReply(text);
+        if (global) {
+          pendingChatProductId = null;
+          appendChat('bot', global);
+          return;
+        }
+
+        if (pendingChatProductId) {
+          if (isAffirmative(text)) {
+            const p = getProduct(pendingChatProductId);
+            pendingChatProductId = null;
+            if (p) {
+              addToCart(p.id, 1);
+              appendChat('bot', '¡Listo! Ya sumé ' + p.name + ' a tu pedido. ¿Seguimos con bebidas o empanadas de autor?');
+            } else {
+              appendChat('bot', 'Hubo un inconveniente al sumar el producto. Probá desde el menú con «Añadir al pedido».');
+            }
+            return;
+          }
+          if (isNegative(text)) {
+            pendingChatProductId = null;
+            appendChat('bot', 'Perfecto, no la sumo. ¿Querés otra recomendación o seguís eligiendo del menú?');
+            return;
+          }
+        }
+
+        const dishId = findProductIdFromChat(text);
+        if (dishId) {
+          pendingChatProductId = dishId;
+          const p = getProduct(dishId);
+          const ref = p ? ' (' + p.name + ')' : '';
+          appendChat('bot', '¡Excelente elección! ¿Querés que la sume al carrito por vos?' + ref);
+          return;
+        }
+
+        if (pendingChatProductId) {
+          appendChat('bot', 'Si querés que agregue el plato que te había propuesto, respondé con «sí» o «dale». Si preferís otro, escribí el nombre del nuevo plato.');
+          return;
+        }
+
+        appendChat('bot', aiReplyFallback(text));
       }
 
       function openChatFirstTime() {
@@ -515,10 +715,7 @@
           playBell();
           if (!chatOpenedOnce) {
             chatOpenedOnce = true;
-            appendChat(
-              'bot',
-              'Bienvenido a Pizzería Elite. Soy su asistente. ¿Le gustaría que le recomiende nuestra pizza premium del mes o un adicional para su pedido?'
-            );
+            appendChat('bot', maestroMensajeInicial());
           }
         } else {
           chatPanel.classList.add('hidden');
@@ -530,26 +727,44 @@
         const input = document.getElementById('chatInput');
         const text = input.value.trim();
         if (!text) return;
-        appendChat('user', text);
         input.value = '';
-        setTimeout(() => appendChat('bot', aiReply(text)), 450);
+        setTimeout(() => processMaestroMessage(text), 120);
       });
 
       chatBubble.addEventListener('click', () => openChatFirstTime());
 
-      document.getElementById('btnOpenCart').addEventListener('click', () => {
-        document.getElementById('cartModal').classList.remove('hidden');
-        document.getElementById('cartModal').classList.add('flex');
-      });
-      document.getElementById('btnCloseCart').addEventListener('click', () => {
-        document.getElementById('cartModal').classList.add('hidden');
-        document.getElementById('cartModal').classList.remove('flex');
-      });
-      document.getElementById('cartModal').addEventListener('click', (e) => {
-        if (e.target.id === 'cartModal') {
-          document.getElementById('cartModal').classList.add('hidden');
-          document.getElementById('cartModal').classList.remove('flex');
+      function openCartModal() {
+        const modal = document.getElementById('cartModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        syncCartDrinkBanner();
+        const needDrinkHint = cartHasFood() && !cartHasDrink() && cartCount() > 0;
+        const sig = JSON.stringify(cart);
+        if (needDrinkHint && !chatPanel.classList.contains('hidden') && drinkHintChatSig !== sig) {
+          drinkHintChatSig = sig;
+          appendChat(
+            'bot',
+            'Vi que tenés comida en el carrito y aún no elegiste bebida. Te recomiendo la Gaseosa Familiar 2,25 L para compartir. Podés sumarla con el botón del carrito o decime «gaseosa» y te la agrego al pedido.'
+          );
         }
+      }
+
+      document.getElementById('btnOpenCart').addEventListener('click', openCartModal);
+
+      document.getElementById('btnAddGaseosaFromBanner').addEventListener('click', () => {
+        addToCart('gaseosa', 1);
+        syncCartDrinkBanner();
+      });
+      function closeCartModal() {
+        const modal = document.getElementById('cartModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        syncCartDrinkBanner();
+      }
+
+      document.getElementById('btnCloseCart').addEventListener('click', closeCartModal);
+      document.getElementById('cartModal').addEventListener('click', (e) => {
+        if (e.target.id === 'cartModal') closeCartModal();
       });
 
       document.getElementById('cartLines').addEventListener('click', (e) => {
