@@ -60,6 +60,9 @@
       object-fit: cover;
       object-position: center;
     }
+    .img-fallback {
+      background: linear-gradient(180deg, #27272a 0%, #18181b 100%);
+    }
   </style>
 </head>
 <body class="min-h-screen pb-28 antialiased">
@@ -85,7 +88,7 @@
         <a href="#premium" class="shrink-0 rounded-full border border-transparent px-4 py-2 text-sm text-amber-200/90 transition hover:border-amber-600/30 hover:bg-amber-950/40">Pizzas Premium</a>
         <a href="#empanadas" class="shrink-0 rounded-full border border-transparent px-4 py-2 text-sm text-amber-200/90 transition hover:border-amber-600/30 hover:bg-amber-950/40">Empanadas de Autor</a>
         <a href="#bebidas" class="shrink-0 rounded-full border border-transparent px-4 py-2 text-sm text-amber-200/90 transition hover:border-amber-600/30 hover:bg-amber-950/40">Bebidas</a>
-        <a href="#faina" class="shrink-0 rounded-full border border-transparent px-4 py-2 text-sm text-amber-200/90 transition hover:border-amber-600/30 hover:bg-amber-950/40">Fainá & Entradas</a>
+        <a href="#extras" class="shrink-0 rounded-full border border-transparent px-4 py-2 text-sm text-amber-200/90 transition hover:border-amber-600/30 hover:bg-amber-950/40">Entradas & adicionales</a>
       </div>
     </nav>
   </header>
@@ -120,9 +123,10 @@
       <div id="gridBebidas" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>
     </section>
 
-    <!-- Fainá & Entradas -->
-    <section id="faina" class="mb-16 scroll-mt-36">
-      <h2 class="mb-6 border-b border-amber-800/30 pb-2 font-display text-2xl font-semibold text-amber-100">Fainá & Entradas</h2>
+    <!-- Entradas & adicionales -->
+    <section id="extras" class="mb-16 scroll-mt-36">
+      <h2 class="mb-6 border-b border-amber-800/30 pb-2 font-display text-2xl font-semibold text-amber-100">Entradas & adicionales</h2>
+      <p class="mb-6 text-sm text-amber-200/60">Adicionales para acompañar tu pizza.</p>
       <div id="gridFaina" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>
     </section>
   </main>
@@ -153,7 +157,7 @@
       <div id="cartDrinkBanner" class="hidden border-b border-amber-700/30 bg-amber-950/50 px-5 py-4">
         <p class="text-xs font-semibold uppercase tracking-wider text-amber-500">Maestro Virtual</p>
         <p id="cartDrinkBannerText" class="mt-1 text-sm text-amber-100/95"></p>
-        <button type="button" id="btnAddGaseosaFromBanner" class="mt-3 w-full rounded-full border border-amber-500/60 bg-amber-600/20 py-2 text-xs font-bold uppercase tracking-wide text-amber-200 transition hover:bg-amber-600 hover:text-black">Sumar gaseosa familiar</button>
+        <button type="button" id="btnAddGaseosaFromBanner" class="mt-3 w-full rounded-full border border-amber-500/60 bg-amber-600/20 py-2 text-xs font-bold uppercase tracking-wide text-amber-200 transition hover:bg-amber-600 hover:text-black">Sumar Gaseosa Familiar 1.5L</button>
       </div>
       <div id="cartLines" class="max-h-[45vh] overflow-y-auto p-5 scrollbar-thin"></div>
       <div class="border-t border-amber-900/30 px-5 py-4">
@@ -246,7 +250,7 @@
           name: 'Muzzarella de la Casa',
           desc: 'Salsa tomate italiana, muzzarella premium.',
           price: 8500,
-          image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&q=80',
+          image: 'https://images.unsplash.com/photo-1565299507177-b0ac66763828?q=80&w=800',
           strong: false,
           chatMatch: ['muzzarella', 'muzza', 'mozzarella', 'muza'],
         },
@@ -256,7 +260,7 @@
           name: 'Napolitana',
           desc: 'Muzzarella, tomate en rodajas, ajo y orégano.',
           price: 9200,
-          image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=800&q=80',
+          image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?q=80&w=800',
           strong: false,
           chatMatch: ['napolitana'],
         },
@@ -266,7 +270,7 @@
           name: 'Fugazzeta',
           desc: 'Cebolla abundante y muzzarella gratinada.',
           price: 9800,
-          image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80',
+          image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=800',
           strong: false,
           chatMatch: ['fugazzeta', 'fugazza'],
         },
@@ -276,7 +280,7 @@
           name: 'Patagónica',
           desc: 'Cordero braseado, hongos, rúcula, reducción balsámica.',
           price: 16500,
-          image: 'https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?w=800&q=80',
+          image: 'https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?q=80&w=800',
           strong: true,
           chatMatch: ['patagonica', 'patagónica'],
         },
@@ -286,7 +290,7 @@
           name: 'Trufa Negra',
           desc: 'Crema de trufa, parmesano, champiñones salteados.',
           price: 15800,
-          image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?w=800&q=80',
+          image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?q=80&w=800',
           strong: true,
           chatMatch: ['trufa negra', 'trufa'],
         },
@@ -321,44 +325,14 @@
           chatMatch: ['humita', 'humita regional', 'empanada humita'],
         },
         {
-          id: 'cerveza',
-          category: 'bebidas',
-          name: 'Cerveza Artesanal IPA',
-          desc: '500 ml — maridaje ideal con premium.',
-          price: 2200,
-          image: 'https://images.unsplash.com/photo-1535957006857-44f48e901f2a?w=800&q=80',
-          strong: false,
-          chatMatch: ['cerveza', 'ipa artesanal', 'cerveza ipa'],
-        },
-        {
           id: 'gaseosa',
           category: 'bebidas',
-          name: 'Gaseosa Familiar 2,25 L',
-          desc: 'Promo combo — compartí en la mesa.',
+          name: 'Gaseosa Familiar 1.5L',
+          desc: 'Formato familiar — ideal para compartir en la mesa.',
           price: 1800,
-          image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=800&q=80',
+          image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=800',
           strong: false,
-          chatMatch: ['gaseosa familiar', 'gaseosa', 'bebida familiar'],
-        },
-        {
-          id: 'vino',
-          category: 'bebidas',
-          name: 'Malbec Reserva (copa)',
-          desc: 'Corte recomendado con cordero.',
-          price: 2500,
-          image: 'https://images.unsplash.com/photo-1510812431400-41d2bd2722f3?w=800&q=80',
-          strong: false,
-          chatMatch: ['malbec', 'vino', 'copa de vino'],
-        },
-        {
-          id: 'faina',
-          category: 'faina',
-          name: 'Fainá Tradicional',
-          desc: 'Porción dorada de harina de garbanzo.',
-          price: 1200,
-          image: 'https://images.unsplash.com/photo-1593560708920-61dd19c43254?w=800&q=80',
-          strong: false,
-          chatMatch: ['faina', 'fainá'],
+          chatMatch: ['gaseosa familiar', 'gaseosa', 'bebida familiar', '1.5', '1,5'],
         },
         {
           id: 'borde',
@@ -366,17 +340,29 @@
           name: 'Borde Relleno de Queso',
           desc: 'Adicional para tu pizza — queso cremoso en el borde.',
           price: 2800,
-          image: 'https://images.unsplash.com/photo-1593504049359-74330189a345?q=80&w=800',
+          image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=800',
           strong: false,
           chatMatch: ['borde relleno', 'borde'],
         },
       ];
 
+      function imgCardFallback(img) {
+        img.classList.add('opacity-0');
+        img.classList.add('pointer-events-none');
+        const ph = img.nextElementSibling;
+        if (ph) ph.classList.remove('hidden');
+      }
+      window.imgCardFallback = imgCardFallback;
+
       function productCard(p) {
+        const safeName = String(p.name).replace(/</g, '&lt;').replace(/>/g, '&gt;');
         return `
           <article class="group overflow-hidden rounded-2xl border border-amber-900/25 bg-elite-charcoal/60 transition hover:border-amber-600/40 hover:shadow-lg hover:shadow-amber-900/20">
-            <div class="aspect-[4/3] overflow-hidden">
-              <img src="${p.image}" alt="${p.name}" class="menu-fit-cover h-full w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy" />
+            <div class="relative h-48 w-full overflow-hidden bg-zinc-800">
+              <img src="${p.image}" alt="${p.name}" class="menu-fit-cover absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy" onerror="imgCardFallback(this)" />
+              <div class="img-fallback pointer-events-none absolute inset-0 hidden flex items-center justify-center px-4 text-center">
+                <span class="font-display text-sm font-medium leading-snug text-amber-200/90">${safeName}</span>
+              </div>
             </div>
             <div class="p-4">
               <h3 class="font-display text-lg font-semibold text-amber-50">${p.name}</h3>
@@ -506,7 +492,7 @@
         if (show) {
           banner.classList.remove('hidden');
           document.getElementById('cartDrinkBannerText').textContent =
-            'Tenés comida en el pedido pero todavía no sumaste bebida. La Gaseosa Familiar 2,25 L es la que más piden para compartir en la mesa. ¿La agregamos antes de cerrar?';
+            'Tenés comida en el pedido pero todavía no sumaste bebida. La Gaseosa Familiar 1.5L es la que más piden para compartir en la mesa. ¿La agregamos antes de cerrar?';
         } else {
           banner.classList.add('hidden');
         }
@@ -524,9 +510,13 @@
             const p = getProduct(id);
             if (!p) return '';
             const qty = cart[id];
+            const safeLine = String(p.name).replace(/</g, '&lt;').replace(/>/g, '&gt;');
             return `
               <div class="flex items-center gap-3 border-b border-amber-900/20 py-3 last:border-0">
-                <img src="${p.image}" alt="" class="menu-fit-cover h-14 w-14 shrink-0 rounded-lg object-cover" />
+                <div class="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-zinc-800">
+                  <img src="${p.image}" alt="" class="menu-fit-cover absolute inset-0 h-full w-full object-cover" onerror="imgCardFallback(this)" />
+                  <div class="img-fallback pointer-events-none absolute inset-0 hidden flex items-center justify-center p-1 text-center"><span class="text-[9px] font-medium leading-tight text-amber-200/85">${safeLine}</span></div>
+                </div>
                 <div class="min-w-0 flex-1">
                   <p class="truncate font-medium text-amber-100">${p.name}</p>
                   <p class="text-xs text-amber-600">${currency.format(p.price)} × ${qty}</p>
@@ -698,7 +688,7 @@
       }
 
       function maestroMensajeInicial() {
-        return '¡Hola! Soy tu asistente Elite. ¿Sabías que si usas el cupón PIZZAWEB hoy tienes un 10% de descuento en empanadas?';
+        return '¡Hola! Soy el Maestro Virtual de Elite. ¿Buscás una de nuestras Pizzas de Autor o querés probar nuestras famosas Empanadas?';
       }
 
       function appendChat(role, text) {
@@ -712,7 +702,7 @@
       function aiReplyFallback(userText) {
         const t = normalizeChat(userText);
         if (/grande|tamano|mediana/.test(t)) {
-          return 'Para grupos conviene pasar de mediana a grande: mejor costo por porción y el borde más crocante. Sumá Fainá y Gaseosa Familiar: cerrás la mesa estilo catering Elite.';
+          return 'Para grupos conviene pasar de mediana a grande: mejor costo por porción y el borde más crocante. Sumá Gaseosa Familiar 1.5L y unas empanadas: cerrás la mesa estilo catering Elite.';
         }
         if (/recomend|suger|que pizza|empanada/.test(t)) {
           return 'Hoy destacamos la Patagónica y las empanadas Carne Cortada a Cuchillo. Si querés clásica, la Muzzarella de la Casa es imbatible. ¿Te sumo un Borde Relleno de Queso?';
@@ -723,7 +713,7 @@
       function globalIntentReply(text) {
         const t = normalizeChat(text);
         if (t.includes('promocion')) {
-          return '¡Combo del mes! Patagónica en tamaño grande + Gaseosa Familiar 2,25 L con 15% de descuento sobre el precio menú. Sumalos desde el menú (Premium y Bebidas) y al finalizar la comanda llega ordenada por WhatsApp.';
+          return '¡Combo del mes! Patagónica en tamaño grande + Gaseosa Familiar 1.5L con 15% de descuento sobre el precio menú. Sumalos desde el menú (Premium y Bebidas) y al finalizar la comanda llega ordenada por WhatsApp.';
         }
         return null;
       }
@@ -811,7 +801,7 @@
           drinkHintChatSig = sig;
           appendChat(
             'bot',
-            'Vi que tenés comida en el carrito y aún no elegiste bebida. Te recomiendo la Gaseosa Familiar 2,25 L para compartir. Podés sumarla con el botón del carrito o decime «gaseosa» y te la agrego al pedido.'
+            'Vi que tenés comida en el carrito y aún no elegiste bebida. Te recomiendo la Gaseosa Familiar 1.5L para compartir. Podés sumarla con el botón del carrito o decime «gaseosa» y te la agrego al pedido.'
           );
         }
       }
