@@ -168,6 +168,39 @@
     </div>
   </div>
 
+  <!-- Modal finalización: entrega + cupón antes de WhatsApp -->
+  <div id="checkoutModal" class="fixed inset-0 z-[60] hidden items-end justify-center bg-black/80 p-4 backdrop-blur-sm sm:items-center" aria-hidden="true">
+    <div class="w-full max-w-md overflow-hidden rounded-2xl border border-amber-700/45 bg-gradient-to-b from-elite-charcoal to-elite-black shadow-2xl gold-glow">
+      <div class="border-b border-amber-900/35 bg-amber-950/30 px-6 py-5">
+        <h3 class="font-display text-xl font-semibold text-amber-50">Finalizar pedido</h3>
+        <p class="mt-1 text-sm text-amber-200/75">Elegí cómo lo recibís y, si tenés cupón, dejalo anotado. Lo verá el local en WhatsApp.</p>
+      </div>
+      <div class="space-y-5 px-6 py-5">
+        <fieldset>
+          <legend class="mb-3 text-xs font-semibold uppercase tracking-wider text-amber-500">Método de entrega</legend>
+          <div class="flex flex-col gap-3 sm:flex-row">
+            <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-amber-800/40 bg-black/25 px-4 py-3 transition hover:border-amber-600/50 has-[:checked]:border-amber-500/70 has-[:checked]:bg-amber-950/40">
+              <input type="radio" name="checkoutDelivery" value="domicilio" class="h-4 w-4 accent-amber-500" />
+              <span class="text-sm font-medium text-amber-100">Envío a domicilio</span>
+            </label>
+            <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-amber-800/40 bg-black/25 px-4 py-3 transition hover:border-amber-600/50 has-[:checked]:border-amber-500/70 has-[:checked]:bg-amber-950/40">
+              <input type="radio" name="checkoutDelivery" value="retiro" class="h-4 w-4 accent-amber-500" checked />
+              <span class="text-sm font-medium text-amber-100">Retiro en local</span>
+            </label>
+          </div>
+        </fieldset>
+        <div>
+          <label for="checkoutCoupon" class="mb-2 block text-xs font-semibold uppercase tracking-wider text-amber-500">¿Tienes un cupón?</label>
+          <input id="checkoutCoupon" type="text" maxlength="80" placeholder="Ej. PIZZAWEB (opcional)" class="w-full rounded-xl border border-amber-800/45 bg-black/35 px-4 py-3 text-sm text-amber-50 placeholder:text-amber-700 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500/40" autocomplete="off" />
+        </div>
+      </div>
+      <div class="flex flex-col-reverse gap-2 border-t border-amber-900/30 bg-black/20 px-6 py-4 sm:flex-row sm:justify-end">
+        <button type="button" id="btnCheckoutCancel" class="rounded-full border border-amber-800/50 px-5 py-2.5 text-sm font-medium text-amber-200 transition hover:bg-amber-950/50">Volver</button>
+        <button type="button" id="btnCheckoutWhatsApp" class="rounded-full bg-gradient-to-r from-amber-700 to-amber-500 px-6 py-2.5 text-sm font-semibold text-black shadow-md shadow-amber-900/25 transition hover:brightness-110">Enviar a WhatsApp</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Tooltip proactivo (texto dinámico desde JS) -->
   <div id="proactiveTooltip" class="pointer-events-none fixed bottom-28 right-6 z-40 max-w-sm translate-y-2 opacity-0 transition duration-300 md:bottom-32 md:right-8">
     <div id="proactiveTooltipInner" class="rounded-xl border border-amber-600/50 bg-elite-charcoal/95 px-4 py-3 text-sm leading-snug text-amber-100 shadow-xl"></div>
@@ -263,7 +296,7 @@
           name: 'Carne Cortada a Cuchillo',
           desc: 'Empanada dorada — cebolla, morrón y especias de autor.',
           price: 950,
-          image: 'https://images.unsplash.com/photo-1550414210-919565548651?q=80&w=800',
+          image: 'https://images.pexels.com/photos/12034509/pexels-photo-12034509.jpeg?auto=compress&cs=tinysrgb&w=800',
           strong: false,
           chatMatch: ['carne cortada', 'empanada de carne', 'empanadas de carne', 'empanada carne'],
         },
@@ -273,7 +306,7 @@
           name: 'Jamón y Queso Premium',
           desc: 'Masa mantecosa, jamón cocido y mezcla de quesos.',
           price: 900,
-          image: 'https://images.unsplash.com/photo-1628102432746-8f3521b2123d?q=80&w=800',
+          image: 'https://images.pexels.com/photos/12034510/pexels-photo-12034510.jpeg?auto=compress&cs=tinysrgb&w=800',
           strong: false,
           chatMatch: ['jamon y queso', 'jamón y queso', 'jamon y queso premium', 'empanada jamon'],
         },
@@ -283,7 +316,7 @@
           name: 'Humita Regional',
           desc: 'Choclo cremoso, queso fresco y albahaca.',
           price: 880,
-          image: 'https://images.unsplash.com/photo-1619851608674-7e793910c20a?q=80&w=800',
+          image: 'https://images.pexels.com/photos/12034512/pexels-photo-12034512.jpeg?auto=compress&cs=tinysrgb&w=800',
           strong: false,
           chatMatch: ['humita', 'humita regional', 'empanada humita'],
         },
@@ -328,22 +361,12 @@
           chatMatch: ['faina', 'fainá'],
         },
         {
-          id: 'provo',
-          category: 'faina',
-          name: 'Provoletas al horno',
-          desc: 'Queso provolone, orégano y aceite de oliva.',
-          price: 4500,
-          image: 'https://images.unsplash.com/photo-1541746972996-4e0b0f43e02a?w=800&q=80',
-          strong: false,
-          chatMatch: ['provoleta', 'provoletas'],
-        },
-        {
           id: 'borde',
           category: 'faina',
           name: 'Borde Relleno de Queso',
           desc: 'Adicional para tu pizza — queso cremoso en el borde.',
           price: 2800,
-          image: 'https://images.unsplash.com/photo-1628840043320-0d1475cda7bf?w=800&q=80',
+          image: 'https://images.unsplash.com/photo-1593504049359-74330189a345?q=80&w=800',
           strong: false,
           chatMatch: ['borde relleno', 'borde'],
         },
@@ -383,7 +406,17 @@
           const raw = localStorage.getItem(STORAGE_KEY);
           if (!raw) return {};
           const data = JSON.parse(raw);
-          return typeof data === 'object' && data !== null ? data : {};
+          if (typeof data !== 'object' || data === null) return {};
+          const validIds = new Set(PRODUCTS.map((p) => p.id));
+          let removed = false;
+          Object.keys(data).forEach((k) => {
+            if (!validIds.has(k)) {
+              delete data[k];
+              removed = true;
+            }
+          });
+          if (removed) localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+          return data;
         } catch {
           return {};
         }
@@ -428,6 +461,8 @@
         }
         document.getElementById('btnFinalize').disabled = !open || cartCount() === 0;
         document.getElementById('btnFinalizeModal').disabled = !open || cartCount() === 0;
+        const btnChk = document.getElementById('btnCheckoutWhatsApp');
+        if (btnChk) btnChk.disabled = !open || cartCount() === 0;
       }
 
       function updateUI() {
@@ -543,6 +578,10 @@
       }
 
       function buildWhatsAppMessage() {
+        const deliveryEl = document.querySelector('input[name="checkoutDelivery"]:checked');
+        const deliveryLabel =
+          deliveryEl && deliveryEl.value === 'domicilio' ? 'Envío a domicilio' : 'Retiro en local';
+        const cupon = document.getElementById('checkoutCoupon').value.trim();
         const lines = ['🍕 *PIZZERÍA ELITE — NUEVO PEDIDO*', ''];
         lines.push('*Productos:*');
         Object.entries(cart).forEach(([id, qty]) => {
@@ -552,14 +591,37 @@
         lines.push('');
         lines.push(`*Total estimado:* ${currency.format(cartTotal())}`);
         lines.push('');
+        lines.push('*Método de entrega:* ' + deliveryLabel);
+        lines.push('*Cupón (texto ingresado — validar manualmente):* ' + (cupon || '(sin cupón indicado)'));
+        lines.push('');
         lines.push('_Enviado desde el menú digital._');
         return encodeURIComponent(lines.join('\n'));
       }
 
-      function openWhatsApp() {
+      function openCheckoutModal() {
+        if (!isKitchenOpen() || cartCount() === 0) return;
+        document.getElementById('checkoutCoupon').value = '';
+        const retiro = document.querySelector('input[name="checkoutDelivery"][value="retiro"]');
+        const domi = document.querySelector('input[name="checkoutDelivery"][value="domicilio"]');
+        if (retiro) retiro.checked = true;
+        if (domi) domi.checked = false;
+        const m = document.getElementById('checkoutModal');
+        m.classList.remove('hidden');
+        m.classList.add('flex');
+      }
+
+      function closeCheckoutModal() {
+        const m = document.getElementById('checkoutModal');
+        m.classList.add('hidden');
+        m.classList.remove('flex');
+      }
+
+      function sendCheckoutToWhatsApp() {
         if (!isKitchenOpen() || cartCount() === 0) return;
         const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${buildWhatsAppMessage()}`;
         window.open(url, '_blank', 'noopener,noreferrer');
+        closeCheckoutModal();
+        closeCartModal();
       }
 
       /** Campana sutil (Web Audio) */
@@ -636,7 +698,7 @@
       }
 
       function maestroMensajeInicial() {
-        return '¡Buenas noches! Soy el Maestro Virtual de Elite. ¿Buscás una pizza clásica, nuestras empanadas premiadas o querés que te arme un combo ideal?';
+        return '¡Hola! Soy tu asistente Elite. ¿Sabías que si usas el cupón PIZZAWEB hoy tienes un 10% de descuento en empanadas?';
       }
 
       function appendChat(role, text) {
@@ -783,8 +845,14 @@
         if (btn && btn.dataset.add) addToCart(btn.dataset.add, 1);
       });
 
-      document.getElementById('btnFinalize').addEventListener('click', openWhatsApp);
-      document.getElementById('btnFinalizeModal').addEventListener('click', openWhatsApp);
+      document.getElementById('btnFinalize').addEventListener('click', openCheckoutModal);
+      document.getElementById('btnFinalizeModal').addEventListener('click', openCheckoutModal);
+
+      document.getElementById('btnCheckoutCancel').addEventListener('click', closeCheckoutModal);
+      document.getElementById('btnCheckoutWhatsApp').addEventListener('click', sendCheckoutToWhatsApp);
+      document.getElementById('checkoutModal').addEventListener('click', (e) => {
+        if (e.target.id === 'checkoutModal') closeCheckoutModal();
+      });
 
       setInterval(updateKitchenUI, 60000);
 
